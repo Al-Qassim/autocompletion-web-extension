@@ -211,9 +211,21 @@ function updateSuggestionsBox(prefix) {
     });
 
     // position the suggestionBox
-    let rect = inputField.getBoundingClientRect();
-    suggestionBox.style.left = rect.left + 'px';
-    suggestionBox.style.top = (rect.bottom + window.scrollY) + 'px';
+    positionTheSuggestionBox()
+}
+
+function positionTheSuggestionBox() {
+
+    if (window.getSelection().anchorNode) {
+        let rect = window.getSelection().getRangeAt(0).getBoundingClientRect()
+        suggestionBox.style.left = rect.left + 'px';
+        suggestionBox.style.top = (rect.bottom + window.scrollY) + 'px';          
+    } else {
+        let rect = inputField.getBoundingClientRect();
+        suggestionBox.style.left = rect.left + 'px';
+        suggestionBox.style.top = (rect.bottom + window.scrollY) + 'px';    
+    }
+
 }
 
 function getSuggestionDiv(word, prefix, index) {
@@ -251,28 +263,56 @@ function insertWord(word) {
     
     let text = readFunction(inputField)
 
-    let words = text.slice(0, CursorIndex)
-                    .split(/\s+/);
+    word_left_index = text.slice(0, CursorIndex)
+                    .split(/\s+/)
+                    .pop()
+                    .join(" ")
+                    .length
 
-    words[words.length - 1] = word;
-    text = words.join(' ') + text.slice(CursorIndex, text.length)
+    text = text.slice(0, word_left_index) + word + text.slice(CursorIndex, text.length)
     
     writeFunction(inputField, text);
 
     focusedSuggestionIndex = 0
     inputField.focus()
 
-    // inputField.setSelectionRange(0, text.length)
-    // inputField.selectionStart = words
-    //                                 .join(' ')
-    //                                 .length
-    // inputField.selectionEnd = inputField.selectionStart
     console.log(words.join(' ').length)
     console.log(text.length)
     setCaretPosition(inputField, words.join(' ').length)
 
     hideSuggestions();
 }
+// function insertWord(word) {
+//     if (!inputField) {
+//         return
+//     }
+    
+//     // get the text again, and complete the replace the last word
+    
+//     let text = readFunction(inputField)
+
+//     let words = text.slice(0, CursorIndex)
+//                     .split(/\s+/);
+
+//     words[words.length - 1] = word;
+//     text = words.join(' ') + text.slice(CursorIndex, text.length)
+    
+//     writeFunction(inputField, text);
+
+//     focusedSuggestionIndex = 0
+//     inputField.focus()
+
+//     // inputField.setSelectionRange(0, text.length)
+//     // inputField.selectionStart = words
+//     //                                 .join(' ')
+//     //                                 .length
+//     // inputField.selectionEnd = inputField.selectionStart
+//     console.log(words.join(' ').length)
+//     console.log(text.length)
+//     setCaretPosition(inputField, words.join(' ').length)
+
+//     hideSuggestions();
+// }
 
 function doGetCaretPosition(ctrl)
 {
@@ -349,25 +389,3 @@ function getSuggestions(prefix) {
     return dictionary.filter(word => word.startsWith(prefix)).slice(0, 5);
 }
 
-// function getCaretPosition() {
-//     let x = 0;
-//     let y = 0;
-//     const isSupported = typeof window.getSelection !== "undefined";
-//     if (isSupported) {
-//         const selection = window.getSelection();
-//         // Check if there is a selection (i.e. cursor in place)
-//         if (selection.rangeCount !== 0) {
-//         // Clone the range
-//             const range = selection.getRangeAt(0).cloneRange();
-//             // Collapse the range to the start, so there are not multiple chars selected
-//             range.collapse(true);
-//             // getCientRects returns all the positioning information we need
-//             const rect = range.getClientRects()[0];
-//             if (rect) {
-//                 x = rect.left; // since the caret is only 1px wide, left == right
-//                 y = rect.top; // top edge of the caret
-//             }
-//         }
-//     }
-//   return { "x": x, "y": y };
-// }
