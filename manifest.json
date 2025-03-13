@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "My Word Is",
+    "version": "1.0",
+    "description": "Predicts words as you type in the browser.",
+    "permissions": ["activeTab"],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["src/content.js"]
+        }
+    ]   
+    
+      
+}
