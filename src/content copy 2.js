@@ -1,23 +1,20 @@
 let suggestionBox = document.createElement('div');
+suggestionBox.className = "suggestionBox"
 document.body.appendChild(suggestionBox);
 
-suggestionBox.className = "suggestionBox"
+let suggestionOption = document.createElement('div');
 
+// styles
 suggestionBox.style.position    = 'absolute'
 suggestionBox.style.backgroundColor  = '#1e1e1e'
 suggestionBox.style.color       = 'white'
 suggestionBox.style.border      = '1px solid #555'
 suggestionBox.style.display     = 'none'
 suggestionBox.style.fontFamily  = 'monospace'
-suggestionBox.style.fontSize  = '1rem'
 suggestionBox.style.zIndex      = '1000000'
 suggestionBox.style.minWidth    = '40%'
 suggestionBox.style.padding    = '5px'
 suggestionBox.style.borderRadius    = '10px'
-
-
-
-let suggestionOption = document.createElement('div');
 
 suggestionOption.style.padding = '2px';
 suggestionOption.style.paddingLeft = '10px';
@@ -25,189 +22,210 @@ suggestionOption.style.cursor = 'pointer';
 suggestionOption.style.borderRadius = '5px';
 suggestionOption.style.transition  = 'background-color 100ms ease'
 
-// colors
-const suggestionColorOnHover = '#3e3e3e'
-const suggestionColorOnFocus = '#04395E'
-const prefixColor = '#19AAFF'
+// suggestionOption.style.transitionDelay  = '1s ease'
+// transition: backgroundColor-color 300ms linear;
 
-let state = {}
 
-// Event listenrs
-document.addEventListener("keyup", (event)=>{ // this activate the suggestion
-    if (["Enter", "ArrowUp", "ArrowDown"].includes(event.key)){
-        return
-    }
-    if (
-        suggestionBox.style.display == "none"
-        &&
-        ["ArrowLeft", "ArrowRight"].includes(event.key)
-    ) {
-        return
-    }
+
+let suggestionColorOnHover = '#3e3e3e'
+let suggestionColorOnFocus = '#04395E'
+let prefixColor = '#19AAFF'
+
+let focusedSuggestionIndex = 0
+let newFocusedSuggestionIndex = null
+
+let inputField = null;
+let keyPressed = null;
+
+let CursorIndex = null
+
+let extension_keys = [
+    "ArrowUp", 
+    "ArrowDown", 
+    "ArrowLeft", 
+    "ArrowRight", 
+    "Enter"
+]
+
+let readFunction = (inputField) => {
     
-    const selection = window.getSelection()
-        
-    if ( // make sure selection is collapsed
-            (
-                (event.target.tagName == "TEXTAREA" || event.target.tagName == "INPUT") 
-                && event.target.selectionStart != event.target.selectionEnd
-            )
-            ||
-            (
-                (event.target.tagName != "TEXTAREA" && event.target.tagName != "INPUT") 
-                && !selection.isCollapsed
-            )
-            ||
-            (
-                (event.target.tagName != "TEXTAREA" && event.target.tagName != "INPUT") 
-                && selection.anchorNode.parentElement.closest('[contenteditable="true"]') == null
-            )
-        ) { 
+    if (inputField.value != null) {
+        console.log("readFunction value: ", inputField.value)
+        return inputField.value
+    }
+    console.log("readFunction textContent: ", inputField.textContent)
+    return inputField.textContent
+
+};
+
+let writeFunction = (inputField, newtext) => {
+    if (inputField.value != null) {
+        console.log("writeFunction value: ", newtext)
+
+        inputField.value = newtext
         return
     }
+    console.log("writeFunction textContent: ", newtext)
+    inputField.textContent = newtext
+};
 
-    // clear state and suggestionBox
-    clearStateAndSuggestion()
-    // re-calculate State
-    calculateState(selection, event)
-    // construct suggestion Box
-    constructSuggestionBox()
+document.addEventListener("keydown", (e)=>{ // keybourd interactions
+
+    console.log("keydown event : ", e)
+
+    if ( 
+        suggestionBox.style.display != 'none'
+        &&
+        extension_keys.includes(e.key)
+    ) { // if suggestion box is appearing, change the focused suggestion    
+        keyPressed = e.key;
+    } else return
+    
+    
+    e.preventDefault()
+    let prefix = get_prefix_from_input_field(inputField)
+    if (keyPressed == "ArrowUp" || keyPressed == "ArrowDown"){
+        newFocusedSuggestionIndex = (
+            keyPressed == "ArrowUp" 
+            ? 
+            focusedSuggestionIndex - 1
+            :
+            focusedSuggestionIndex + 1
+        )
+    
+        let SuggestionOption = document.getElementsByClassName(`SuggestionOption_${newFocusedSuggestionIndex}`)
+    
+        if (SuggestionOption.length == 1){ // if suggestion doesn't exist, which is mostly because focusedSuggestionIndex is too big or two small, don't change
+            
+            SuggestionOption[0].style.backgroundColor = suggestionColorOnFocus
+            SuggestionOption = document.getElementsByClassName(`SuggestionOption_${focusedSuggestionIndex}`)
+            SuggestionOption[0].style.backgroundColor = "#00000000"
+            focusedSuggestionIndex = newFocusedSuggestionIndex
+        }
+
+    } else if (keyPressed == "ArrowLeft" || keyPressed == "ArrowRight"){
+        // inputField = e.target
+        let moveCuorser = (
+            keyPressed == "ArrowLeft"
+            ?
+            -1
+            :
+            1
+        )
+        inputField.dispatchEvent(new KeyboardEvent("keydown", { key: "a" })); 
+        reset_all_values()
+        // CursorIndex = doGetCaretPosition(inputField)
+        // setCaretPosition(inputField, CursorIndex + moveCuorser)
+        
+        updateSuggestionsBox(
+            prefix
+        );
+
+
+    } else if (keyPressed == "Enter"){
+        
+        word = document.getElementsByClassName(`SuggestionOption_${focusedSuggestionIndex}`)[0].textContent
+        insertWord(word, prefix)
+        
+    }
+  
 })
 
-document.addEventListener("keydown", (event)=>{  // this just take care off Enter to apply a suggestion, or ArrowUp/ArrowDown to change focused suggestion
-    // make sure suggestionBox is visible and a special key is pressed
-    if (suggestionBox.style.display == "none"){
-        return
-    } else if (event.key == "Enter") {
-        event.preventDefault()
-        event.stopImmediatePropagation();
-        applySuggestion(state["suggestionFocusIndex"])
-    } else if (event.key == "ArrowUp" || event.key == "ArrowDown") {
-        event.preventDefault()
-        event.stopImmediatePropagation();
-        const oldIndex = state["suggestionFocusIndex"]
-        const newIndex = event.key == "ArrowUp" ? oldIndex - 1 : oldIndex + 1
-        
-        if (newIndex >= 0 && newIndex < suggestionBox.children.length) {
-            suggestionBox.children[oldIndex].style.backgroundColor = "#00000000"
-            suggestionBox.children[newIndex].style.backgroundColor = suggestionColorOnFocus
-            state["suggestionFocusIndex"] = newIndex
-        }
-    }
+document.addEventListener('click', (e) => { // click interactions
     
-}, true)
+    console.log("click event : ", e)
+    
+    if (e.target.className.split("_")[0] == "SuggestionOption"){
+        e.preventDefault()
 
-document.addEventListener("click", (event)=>{ // depending on where you click, this will apply a suggestion option or turn off suggestion 
-    const className = event.target.className
-    if (className.includes("SuggestionOption_")) { // if you click on a suggestion option, then apply it
-        event.preventDefault()
-        event.stopImmediatePropagation();
-        const index = Number(className.slice("SuggestionOption_".length))
-        applySuggestion(index)
-    } else { // if you click anywhere else, then clear the suggetions box
-        clearStateAndSuggestion()
-    }
-}, true)
-
-// functions
-
-function calculateState(selection, event){
-
-    // input Or Textarea
-    state["inputOrTextarea"] = event.target.tagName == "TEXTAREA" || event.target.tagName == "INPUT"
-
-    if (state["inputOrTextarea"]) {
-        // store the text node
-        state["textNode"] = event.target
-        // store anchorOffset
-        state["anchorOffset"] = state["textNode"].selectionStart
-
-        // store the prefix
-        const text = state["textNode"].value.slice(0, state["anchorOffset"])
-        const words = text.split(/\s+/);
-        state["prefix"] = words[words.length - 1];
-        
-        // store caret coordinates
-        state["corners"] = {
-            top: state["textNode"].getBoundingClientRect().top,
-            right: state["textNode"].getBoundingClientRect().right,
-            bottom: state["textNode"].getBoundingClientRect().bottom, 
-            left: state["textNode"].getBoundingClientRect().left
-        }
+        word = e.target.textContent
+        insertWord(word, get_prefix_from_input_field(inputField))
     } else {
-        // store the text node
-        state["textNode"] = selection.anchorNode
-
-        // store anchorOffset
-        state["anchorOffset"] = selection.anchorOffset
-
-        // store the prefix
-        selection.modify("extend", "backward", "word")
-        state["prefix"] = selection.toString() 
-        selection.collapseToEnd()
         
-        // store caret coordinates
-        state["corners"] = {
-            top: selection.getRangeAt(0).getBoundingClientRect().top,
-            right: selection.getRangeAt(0).getBoundingClientRect().right,
-            bottom: selection.getRangeAt(0).getBoundingClientRect().bottom, 
-            left: selection.getRangeAt(0).getBoundingClientRect().left
-        }
+        hideSuggestions()
     }
-    console.log("state after key press", state)
-}
+});
 
-function constructSuggestionBox(){
-    // check valid perfix
-    if (state["prefix"].length == 0) {
+document.addEventListener('keyup', function(event) {
+    if (extension_keys.includes(event.code)){ // key pressed should be one of the extension keys
         return
     }
-    // search suggestions
-    const suggestions = getSuggestions(state["prefix"])
-    // check if any suggestions
-    if (suggestions.length == 0) {
-        return
-    }
-    // append them to suggestions box
-    let div = null
-    suggestions.forEach((Suggestion, index) => {
-        div = getSuggestionDiv(Suggestion, state["prefix"], index)
-        suggestionBox.appendChild(div) 
-    })
+    // console.log("caret position : ", getCaretPosition())
+    console.log("input event : ", event)
+    // get input field object
+    reset_all_values()
+    inputField = event.target;
+    CursorIndex = doGetCaretPosition(inputField)
     
-    // focus on first suggestion
-    state["suggestionFocusIndex"] = 0
-    // show suggestionBox
-    suggestionBox.style.display = "block"
+    //update Suggestions Box
 
-    // position 
-    positionSuggestionBox()
+    updateSuggestionsBox(
+        get_prefix_from_input_field(inputField)
+    );
+});
 
-
+function reset_all_values() {
+    focusedSuggestionIndex = 0
+    newFocusedSuggestionIndex = null
+    CursorIndex = null
+    keyPressed = null
+    // inputField = null
 }
 
-function positionSuggestionBox() {
-    if (
-        state.corners.left
-        + suggestionBox.getBoundingClientRect().width
-        + window.scrollX
-        > window.outerWidth ){
-            suggestionBox.style.left = (state.corners.left + window.scrollX - suggestionBox.getBoundingClientRect().width) + "px"
-        } else {
-            suggestionBox.style.left = (state.corners.left + window.scrollX) + "px"
-        }
-    if (
-        state.corners.bottom
-        + suggestionBox.getBoundingClientRect().height
-        + window.scrollY
-        > window.outerHeight){
-            suggestionBox.style.top = (state.corners.top + window.scrollY - suggestionBox.getBoundingClientRect().height) + "px"
-        } else {
-            suggestionBox.style.top = (state.corners.bottom + window.scrollY) + "px"
-        }
-
+function get_prefix_from_input_field(inputField) {
+    CursorIndex = doGetCaretPosition(inputField)
+    let text = readFunction(inputField).slice(0, CursorIndex)
+    let words = text.split(/\s+/);
+    let prefix = words[words.length - 1];
+    return prefix
 }
 
+function updateSuggestionsBox(prefix) {
+    
+    // if prefix is empty, hide suggestions box
+    if (prefix.length == 0) {
+        hideSuggestions()
+        return
+    }
+    
+    // get array of getSuggestions
+    let suggestions = getSuggestions(prefix);
+    
+    // if no suggestions, hide suggestions box
+    if (suggestions.length == 0) {
+        hideSuggestions();
+        return;
+    }
+
+    // show and clear suggestions box
+    suggestionBox.style.display = 'block'
+    suggestionBox.innerHTML = '';
+    
+    // add suggestions divs to the box
+    suggestions.forEach((word, index) => {
+        suggestionBox.appendChild(
+            getSuggestionDiv(word, prefix, index)
+        );
+        console.log(index)
+    });
+
+    // position the suggestionBox
+    positionTheSuggestionBox()
+}
+
+function positionTheSuggestionBox() {
+
+    if (window.getSelection().anchorNode) {
+        let rect = window.getSelection().getRangeAt(0).getBoundingClientRect()
+        suggestionBox.style.left = rect.left + 'px';
+        suggestionBox.style.top = (rect.bottom + window.scrollY) + 'px';          
+    } else {
+        let rect = inputField.getBoundingClientRect();
+        suggestionBox.style.left = rect.left + 'px';
+        suggestionBox.style.top = (rect.bottom + window.scrollY) + 'px';    
+    }
+
+}
 
 function getSuggestionDiv(word, prefix, index) {
     let div = suggestionOption.cloneNode()
@@ -216,72 +234,154 @@ function getSuggestionDiv(word, prefix, index) {
     div.innerHTML = "<span style='color:" + prefixColor + "'>" + prefix + "</span>" + word.slice(prefix.length, word.length)
     
     if (index == 0) {div.style.backgroundColor = suggestionColorOnFocus}
+    
+    
+    // div.addEventListener('click', (e) => {
+    //     e.preventDefault()
+    //     insertWord(word);
+    // });
 
-    div.addEventListener("mouseover", ()=>{div.style.backgroundColor = suggestionColorOnHover})
-    div.addEventListener("mouseout", ()=>{div.style.backgroundColor = '#00000000'})
+    div.addEventListener("mouseover", ()=>{console.log(index); div.style.backgroundColor = suggestionColorOnHover})
+    div.addEventListener("mouseout", ()=>{console.log(index); div.style.backgroundColor = '#00000000'})
 
     return div
 }
 
+function hideSuggestions() {
+    suggestionBox.style.display = 'none';
+    reset_all_values()
+    inputField = null
+}
+
+function insertWord(word, prefix) {
+
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+
+    // Create text node and insert it
+    const textNode = document.createTextNode(word.slice(prefix.length, word.length));
+    range.insertNode(textNode);
+
+    // Move the cursor after inserted text
+    range.setStartAfter(textNode);
+    range.setEndAfter(textNode);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    hideSuggestions();
+}
+// function insertWord(word) {
+//     if (!inputField) {
+//         return
+//     }
+    
+//     // get the text again, and complete the replace the last word
+    
+//     let text = readFunction(inputField)
+
+//     let words = text.slice(0, CursorIndex)
+//                     .split(/\s+/);
+
+//     words[words.length - 1] = word;
+//     text = words.join(' ') + text.slice(CursorIndex, text.length)
+    
+//     writeFunction(inputField, text);
+
+//     focusedSuggestionIndex = 0
+//     inputField.focus()
+
+//     // inputField.setSelectionRange(0, text.length)
+//     // inputField.selectionStart = words
+//     //                                 .join(' ')
+//     //                                 .length
+//     // inputField.selectionEnd = inputField.selectionStart
+//     console.log(words.join(' ').length)
+//     console.log(text.length)
+//     setCaretPosition(inputField, words.join(' ').length)
+
+//     hideSuggestions();
+// }
+
+function doGetCaretPosition(ctrl)
+{
+    var CaretPos = 0;
+
+    if (ctrl.selectionStart || ctrl.selectionStart == 0)
+    {// Standard.
+        console.log("selectionStart")
+        CaretPos = ctrl.selectionStart;
+    }
+    else if (document.selection)
+    {// Legacy IE
+        console.log("document.selection")
+        ctrl.focus ();
+        var Sel = document.selection.createRange ();
+        Sel.moveStart ('character', -ctrl.value.length);
+        CaretPos = Sel.text.length;
+    }
+    else if (window.getSelection())
+        {// Legacy IE
+            console.log("window.getSelection()")
+            // ctrl.focus ();
+            var Sel = window.getSelection();
+            CaretPos = Sel.anchorOffset;
+        }
+    console.log("CaretPos", CaretPos)
+    return (CaretPos);
+}
+
+function setCaretPosition(ctrl,pos)
+{
+    if (ctrl.setSelectionRange)
+    {
+        console.log("setCaretPosition 1")
+        ctrl.focus();
+        ctrl.setSelectionRange(pos,pos);
+    }
+    else if (ctrl.createTextRange)
+    {
+        console.log("setCaretPosition 2")
+        var range = ctrl.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+    }
+    else {
+        console.log("setCaretPosition 3")
+        let selection = window.getSelection();
+        let range = document.createRange();
+        
+        // Get the target element (ensure it's contenteditable or a text node)
+        let targetElement = ctrl; // Replace with your element
+
+        // Ensure the element has text content or is an editable container
+        let textNode = targetElement.firstChild; // Assuming first child is a text node
+
+        if (textNode) {
+            // Set the range start to the desired position in the text node
+            range.setStart(textNode, pos);
+            range.collapse(true); // Collapse to place the caret at the start of the range
+
+            // Remove any existing selections and add the new range
+            selection.removeAllRanges();
+            selection.addRange(range);
+        } else {
+            console.error('The target element does not contain text.');
+        }
+    }
+}
+
 function getSuggestions(prefix) {
+    // const dictionary = ['hello', 'help', 'helium', 'hero', 'hermit', 'hexagon']; // Extend this dynamically
     return dictionary.filter(word => word.startsWith(prefix)).slice(0, 5);
 }
 
-function clearStateAndSuggestion() {
-    state = {}
-    suggestionBox.innerHTML = ""
-    suggestionBox.style.display = "none"
-}
 
-function applySuggestion(suggestionIndex) {
-    // get the word from the option
-    const word = suggestionBox.children[suggestionIndex].textContent
-    
-    // for discord
-    // word.slice(state.prefix.length)
-    //     .split("")
-    //     .forEach((char) => {
-    //         const event = new InputEvent("beforeinput", {
-    //             inputType: "insertText",
-    //             data: char,
-    //             bubbles: true,
-    //             cancelable: true,
-    //             composed: true,
-    //         });
-    //         state["textNode"].dispatchEvent(event);
-    //     });
-            
-    // put it to the UI
-    if (state["inputOrTextarea"]) {
-        
-        state["textNode"].value = (
-            state["textNode"].value.slice(0, state.anchorOffset) +
-            word.slice(state.prefix.length) + " " +
-            state["textNode"].value.slice(state.anchorOffset)
-        )
-
-        state["textNode"].selectionStart = state.anchorOffset + word.slice(state.prefix.length).length + 1
-        state["textNode"].selectionEnd = state["textNode"].selectionStart
-        state["textNode"].focus()
-        state["textNode"].dispatchEvent(new InputEvent("input", { bubbles: true }));
-
-    } else {
-
-        state["textNode"].textContent = (
-            state["textNode"].textContent.slice(0, state.anchorOffset) +
-            word.slice(state.prefix.length) + " " +
-            state["textNode"].textContent.slice(state.anchorOffset)
-        )
-        window.getSelection().setPosition(state["textNode"])
-        window.getSelection().extend(state.textNode, state.anchorOffset + word.slice(state.prefix.length).length + 1)
-        window.getSelection().collapseToEnd()
-        state["textNode"].dispatchEvent(new InputEvent("input", { bubbles: true }));
-    }
-
-    clearStateAndSuggestion()
-}
-
-const dictionary = [
+let dictionary = [
     "able",
     "about",
     "above",
@@ -1283,3 +1383,4 @@ const dictionary = [
     "young",
     "your"
 ]
+
