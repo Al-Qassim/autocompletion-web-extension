@@ -8,4 +8,4 @@ you can try it from here:
 * chrome: # todo: put a link here once I publish it
 * firefox: # todo: same
 
-![Alternate image text](./demo/images/Screenshot%202025-03-17%20192746.png)
+![Alternate image text](./demo/images/demo%20image.png)
