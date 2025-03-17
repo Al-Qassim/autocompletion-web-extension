@@ -8,6 +8,4 @@ you can try it from here:
 * chrome: # todo: put a link here once I publish it
 * firefox: # todo: same
 
-# demo video
-
-<iframe src="https://www.youtube.com/watch?v=CGOTQOpg1-o" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+![Alternate image text](./demo/images/Screenshot%202025-03-17%20192746.png)
