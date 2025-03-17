@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Auto Completion",
-    "version": "0.0.0",
+    "version": "0.0",
     "description": "Inspired by VSCode auto completion, this web browser extension predicts your word and give you suggestions as you type.",
     "content_scripts": [
         {

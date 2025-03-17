@@ -9,15 +9,11 @@ suggestionBox.style.border      = '1px solid #555'
 suggestionBox.style.display     = 'none'
 suggestionBox.style.fontFamily  = 'monospace'
 suggestionBox.style.fontSize  = (20 * window.outerHeight / 1000)+ "px"
-// suggestionBox.style.fontSize  = (window.outerHeight * 0.05) + "px"
-
 suggestionBox.style.zIndex      = '1000000'
 suggestionBox.style.minWidth    = '20%'
 suggestionBox.style.padding    = '5px'
 suggestionBox.style.borderRadius    = '10px'
 suggestionBox.style.overflowY = "auto";
-// suggestionBox.style.height = "100px";
-
 
 
 export let suggestionOption = document.createElement('div');
