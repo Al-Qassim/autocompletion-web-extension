@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 33.866666 33.866666"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="public\icons\public\icons\icon-48.png"
+   inkscape:export-xdpi="36"
+   inkscape:export-ydpi="36"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#7e7e7e"
+     inkscape:document-units="mm"
+     inkscape:zoom="4"
+     inkscape:cx="45.25"
+     inkscape:cy="56.375"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g17"
+     showgrid="false"
+     inkscape:export-bgcolor="#ffffff00" />
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <rect
+       x="13.2782"
+       y="24.589259"
+       width="104.75024"
+       height="74.99724"
+       id="rect2" />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath24">
+      <rect
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+         id="rect25"
+         width="29.25836"
+         height="11.270911"
+         x="1.8401487"
+         y="6.118494"
+         inkscape:label="suggestionBox"
+         sodipodi:type="rect"
+         ry="2.9442379" />
+    </clipPath>
+    <rect
+       x="13.2782"
+       y="24.589259"
+       width="104.75024"
+       height="74.99724"
+       id="rect17" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:none">
+    <rect
+       style="fill:#1e1e1e;fill-opacity:1;stroke-width:0.264583"
+       id="rect1"
+       width="33.866665"
+       height="33.866665"
+       x="0"
+       y="0"
+       inkscape:label="background"
+       ry="4.9609375" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.55346031,0,0,0.55346031,-3.9682201,-11.764797)"
+       id="text1"
+       style="text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect2);display:inline;fill:#1e1e1e;fill-opacity:1"><tspan
+         x="13.277344"
+         y="35.537808"
+         id="tspan9"><tspan
+           style="font-size:12px;font-family:'Space Mono';-inkscape-font-specification:'Space Mono, Normal';fill:#ffffff"
+           id="tspan3">Auto 
+</tspan></tspan><tspan
+         x="13.277344"
+         y="50.910824"
+         id="tspan14"><tspan
+           style="font-size:12px;font-family:'Space Mono';-inkscape-font-specification:'Space Mono, Normal';fill:#ffffff"
+           id="tspan13">Comp</tspan></tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.302261;stroke-opacity:1"
+       d="m 20.126218,11.032579 v 7.132246"
+       id="path4" />
+    <g
+       id="g4"
+       transform="translate(0.09597495,13.069022)"
+       clip-path="url(#clipPath24)">
+      <rect
+         style="fill:#04395e;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5"
+         width="27.096186"
+         height="6.0724921"
+         x="2.9212358"
+         y="7.5446086"
+         inkscape:label="suggestion little Box"
+         sodipodi:type="rect"
+         ry="1.932156" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.11769px;font-family:'Space Mono';-inkscape-font-specification:'Space Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#19aaff;fill-opacity:1;stroke-width:0.343141"
+         x="3.9165599"
+         y="11.639101"
+         id="text2"
+         inkscape:label="suggestion option 1"><tspan
+           sodipodi:role="line"
+           id="tspan2"
+           style="stroke-width:0.343141"
+           x="3.9165599"
+           y="11.639101">Comp<tspan
+   style="fill:#ffffff;fill-opacity:1;stroke-width:0.343141"
+   id="tspan4">letion</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.11769px;font-family:'Space Mono';-inkscape-font-specification:'Space Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#19aaff;fill-opacity:1;stroke-width:0.343141"
+         x="3.8245525"
+         y="17.711592"
+         id="text12"
+         inkscape:label="suggestion option 0"><tspan
+           sodipodi:role="line"
+           id="tspan12"
+           style="stroke-width:0.343141"
+           x="3.8245525"
+           y="17.711592">Comp<tspan
+   style="fill:#ffffff;fill-opacity:1;stroke-width:0.343141"
+   id="tspan11">lete</tspan></tspan></text>
+      <rect
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4"
+         width="29.25836"
+         height="11.270911"
+         x="1.8401487"
+         y="6.1184936"
+         inkscape:label="suggestionBox"
+         sodipodi:type="rect"
+         ry="2.9442379" />
+    </g>
+  </g>
+  <g
+     inkscape:label="Layer 2"
+     inkscape:groupmode="layer"
+     id="g17"
+     style="display:inline">
+    <rect
+       style="fill:#1e1e1e;fill-opacity:1;stroke-width:0.264583"
+       id="rect3"
+       width="33.866665"
+       height="33.866665"
+       x="0"
+       y="0"
+       inkscape:label="background"
+       ry="4.9609375" />
+    <g
+       id="g18"
+       transform="translate(-0.20387769,-0.71471965)">
+      <text
+         xml:space="preserve"
+         transform="matrix(0.92614486,0,0,0.92614486,-9.3804392,-19.96041)"
+         id="text10"
+         style="text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect17);display:inline;fill:#1e1e1e;fill-opacity:1"><tspan
+           x="13.277344"
+           y="35.537808"
+           id="tspan16"><tspan
+             style="font-size:12px;font-family:'Space Mono';-inkscape-font-specification:'Space Mono, Normal';fill:#ffffff"
+             id="tspan15">Auto 
+</tspan></tspan><tspan
+           x="13.277344"
+           y="50.910824"
+           id="tspan18"><tspan
+             style="font-size:12px;font-family:'Space Mono';-inkscape-font-specification:'Space Mono, Normal';fill:#19aaff"
+             id="tspan17">Comp</tspan></tspan></text>
+      <path
+         style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.505795;stroke-opacity:1"
+         d="M 30.938514,18.188076 V 30.122975"
+         id="path10" />
+    </g>
+  </g>
+</svg>
